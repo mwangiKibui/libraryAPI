@@ -1,5 +1,6 @@
 const dbConfig = require('../config/db');
 const Sequelize = require("sequelize");
+const Pool = require('pg').Pool;
 const mysql = require('mysql2/promise');
 
 
@@ -28,6 +29,8 @@ const models = [{
     "value": books
 }];
 
+db.models = models;
+
 for(let model of models){
     db[model.key] = model.value;
 }
@@ -39,22 +42,31 @@ db.customSync = new Promise(async (resolve,reject) => {
 
         resolve("database synced successfully");
     }catch(error){
-        if(error.message && error.message.toLowerCase().includes('unknown database')){
+        if(error.message && error.message.toLowerCase().includes('unknown database') || error.message.toLowerCase().includes('does not exist')){
             // we have to create the database.
             try {
-                let dbConnection = await mysql.createConnection({
-                    host:dbConfig.HOST,
+                // let dbConnection = await mysql.createConnection({
+                //     host:dbConfig.HOST,
+                //     user: dbConfig.USER,
+                //     // database: dbConfig.DB
+                // });
+                let dbConnection = new Pool({
                     user: dbConfig.USER,
-                    // database: dbConfig.DB
+                    host: dbConfig.HOST,
+                    // database: 'api',
+                    password: dbConfig.PASSWORD,
+                    port: dbConfig.port,
                 });
 
-                let [results] = await dbConnection.query("CREATE DATABASE "+dbConfig.DB);
+                let result = await dbConnection.query('CREATE DATABASE '+dbConfig.DB);
+
+                console.log("the result of creating db ",result);
 
                 try {
 
                     await db.sequelize.sync();
 
-                    console.log("db creation results: ",results);
+                    // console.log("db creation results: ",results);
 
                     resolve("db created and synced successfully");
 

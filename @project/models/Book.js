@@ -11,6 +11,12 @@ module.exports = (sequelize,Sequelize) => {
         },
         datePublished: {
             type: Sequelize.DATE
+        },
+        noOfChapters:{
+            type: Sequelize.INTEGER
+        },
+        noOfPages:{
+            type:Sequelize.INTEGER
         }
     });
     return Book;

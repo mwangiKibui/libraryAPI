@@ -9,8 +9,8 @@ module.exports = {
     USER: process.env.DB_USER,
     PASSWORD: process.env.DB_PASSWORD,
     DB: process.env.DB_NAME,
-    dialect:"mysql",
-    port: process.env.MYSQLDB_DOCKER_PORT,
+    dialect:"postgres",
+    port: process.env.DB_PORT,
     pool:{
         max: 5,
         min: 0,
