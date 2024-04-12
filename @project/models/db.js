@@ -1,7 +1,6 @@
 const dbConfig = require('../config/db');
 const Sequelize = require("sequelize");
 const Pool = require('pg').Pool;
-const mysql = require('mysql2/promise');
 
 
 const sequelize = new Sequelize(dbConfig.DB,dbConfig.USER,dbConfig.PASSWORD,{
