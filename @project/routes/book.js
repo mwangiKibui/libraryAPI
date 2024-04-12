@@ -1,11 +1,14 @@
 const express = require('express');
-const {getBooks,createBook} = require('../controllers/book');
+const db = require("../models/db");
+const Book = require('../controllers/book');
 const router = express.Router();
 
+const book = new Book(db);
 
-router.get("/books",getBooks);
 
-router.post("/books",createBook);
+router.get("/books",(req,res,next) => book.getBooks(req,res,next));
+
+router.post("/books",(req,res,next) => book.createBook(req,res,next));
 
 router.put("/books", (req,res,next) => res.json({
     success:1,

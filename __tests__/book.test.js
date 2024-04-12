@@ -1,14 +1,14 @@
 const SequelizeMock = require("sequelize-mock");
 const httpMocks = require('node-mocks-http');
-const {createBook,getBooks} = require("../@project/controllers/book");
+const Book = require("../@project/controllers/book");
 
 describe("book controller",() => {
     let sequelizeMock;
-    // let Book;
+    let BookMock;
 
     beforeAll( () => {
         sequelizeMock = new SequelizeMock();
-        Book = sequelizeMock.define("Book",{
+        BookMock = sequelizeMock.define("Book",{
             title:"My Life in Crime",
             author:"John Kiriamiti",
             description:"John Kiriamiti's life in crime",
@@ -32,7 +32,14 @@ describe("book controller",() => {
             });
             let httpRes = httpMocks.createResponse();
 
-            await createBook(httpReq,httpRes);
+            
+            const booksMockModel = {
+                "books":BookMock
+            };
+
+            const book = new Book(booksMockModel);
+ 
+            await book.createBook(httpReq,httpRes);
 
             expect(httpRes.statusCode).toBe(200);
             expect(httpRes.statusMessage).toBe('OK');
@@ -53,7 +60,13 @@ describe("book controller",() => {
             });
             let httpRes = httpMocks.createResponse();
 
-            await createBook(httpReq,httpRes);
+            const booksMockModel = {
+                "books":BookMock
+            };
+
+            const book = new Book(booksMockModel);
+
+            await book.createBook(httpReq,httpRes);
 
             expect(httpRes.statusCode).toBe(200);
             expect(httpRes.statusMessage).toBe('OK');
@@ -73,9 +86,11 @@ describe("book controller",() => {
                 }
             });
             let httpRes = httpMocks.createResponse();
-
-            await createBook(httpReq,httpRes);
-
+            const booksMockModel = {
+                "books":BookMock
+            };
+            const book = new Book(booksMockModel);
+            await book.createBook(httpReq,httpRes);
             expect(httpRes.statusCode).toBe(200);
             expect(httpRes.statusMessage).toBe('OK');
             expect(httpRes._getJSONData().success).toBe(true);
@@ -91,9 +106,13 @@ describe("book controller",() => {
             const httpReq = httpMocks.createRequest();
             const httpRes = httpMocks.createResponse();
 
-            await getBooks(httpReq,httpRes);
+            const booksMockModel = {
+                "books":BookMock
+            };
 
-            // console.log("the response received ",httpRes._getJSONData());
+            const book = new Book(booksMockModel);
+
+            await book.getBooks(httpReq,httpRes);
 
             expect(httpRes.statusCode).toBe(200);
             expect(httpRes.statusMessage).toBe('OK');
